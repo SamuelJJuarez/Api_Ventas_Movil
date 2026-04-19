@@ -1,0 +1,54 @@
+# =========================
+# NODE / EXPRESS
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# VARIABLES DE ENTORNO
+# =========================
+.env
+
+# =========================
+# BUILD / OUTPUT
+# =========================
+dist/
+build/
+out/
+coverage/
+
+# =========================
+# LOGS
+# =========================
+logs
+*.log
+
+# =========================
+# SISTEMA OPERATIVO
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# EDITORES / IDE
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =========================
+# CACHE NODE
+# =========================
+.npm
+.eslintcache
+
+# =========================
+# DEPLOY (opcional)
+# =========================
+.vercel
+.netlify
