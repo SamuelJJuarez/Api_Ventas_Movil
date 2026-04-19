@@ -14,6 +14,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.json({
+        success: true,
+        message: 'API funcionando correctamente',
+        version: '1.0.0'
+    });
+});
+
 // --- ORQUESTACIÓN DE RUTAS ---
 
 // Conectamos las rutas de autenticación
