@@ -30,20 +30,52 @@ export const obtenerProductoPorCodigo = async (req, res) => {
     }
 };
 
-// Crear un nuevo producto (con inserción parametrizada segura)
+// POST: Crear un nuevo producto (Soportando el estado activo/inactivo)
 export const crearProducto = async (req, res) => {
-    const { codigo_barras, nombre, descripcion, precio, stock } = req.body;
+    const { codigo_barras, nombre, descripcion, precio, stock, activo } = req.body;
     try {
+        // Si 'activo' no viene en el cuerpo, por defecto se inserta como true
+        const estadoActivo = activo !== undefined ? activo : true;
+
         const [nuevoProducto] = await sql`
-            INSERT INTO productos (codigo_barras, nombre, descripcion, precio, stock)
-            VALUES (${codigo_barras}, ${nombre}, ${descripcion}, ${precio}, ${stock})
+            INSERT INTO productos (codigo_barras, nombre, descripcion, precio, stock, activo)
+            VALUES (${codigo_barras}, ${nombre}, ${descripcion}, ${precio}, ${stock}, ${estadoActivo})
             RETURNING *
         `;
         res.status(201).json(nuevoProducto);
     } catch (error) {
-        if (error.code === '23505') { // Violación de UNIQUE
+        console.error('Error al crear producto:', error);
+        if (error.code === '23505') { // Violación de restricción UNIQUE
             return res.status(400).json({ error: 'El código de barras ya está registrado' });
         }
         res.status(500).json({ error: 'Error al crear el producto' });
+    }
+};
+
+// PUT: Actualizar un producto existente (Excluyendo código de barras de la modificación)
+export const actualizarProducto = async (req, res) => {
+    const { id } = req.params;
+    const { nombre, descripcion, precio, stock, activo } = req.body;
+
+    try {
+        const [productoActualizado] = await sql`
+            UPDATE productos 
+            SET nombre = ${nombre}, 
+                descripcion = ${descripcion}, 
+                precio = ${precio}, 
+                stock = ${stock}, 
+                activo = ${activo}
+            WHERE id = ${id}
+            RETURNING *
+        `;
+
+        if (!productoActualizado) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+
+        res.status(200).json(productoActualizado);
+    } catch (error) {
+        console.error('Error al actualizar producto:', error);
+        res.status(500).json({ error: 'Error al actualizar el producto' });
     }
 };

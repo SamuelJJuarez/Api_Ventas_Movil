@@ -12,5 +12,7 @@ router.use(verificarToken);
 router.get('/', productosController.obtenerProductos);
 router.get('/codigo/:codigo', productosController.obtenerProductoPorCodigo);
 router.post('/', productosController.crearProducto);
+router.put('/:id', productosController.actualizarProducto);
+
 
 export default router;
