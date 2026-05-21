@@ -15,9 +15,9 @@ export const obtenerMetricasDashboard = async (req, res) => {
             sql`
                 SELECT DATE(fecha_venta) as fecha, SUM(total) as total_dia 
                 FROM ventas 
+                WHERE fecha_venta >= NOW() - INTERVAL '7 days'
                 GROUP BY DATE(fecha_venta) 
-                ORDER BY fecha DESC 
-                LIMIT 7
+                ORDER BY fecha ASC 
             `,
 
             // 3. Top 5 Productos más vendidos
